@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    private $user;
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+
     public function index()
     {
-        dd("hi");
+        $listUser = $this->user->all();
+        return view('user.index', compact('listUser'));
     }
 
     /**
