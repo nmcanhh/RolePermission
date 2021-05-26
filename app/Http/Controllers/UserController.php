@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Role;
+use Illuminate\Support\Facades\Hash;
+use DB;
 
 
 class UserController extends Controller
 {
     private $user;
-    public function __construct(User $user)
+    private $role;
+    public function __construct(User $user, Role $role)
     {
         $this->user = $user;
+        $this->role = $role;
     }
 
 
@@ -21,25 +26,43 @@ class UserController extends Controller
         return view('user.index', compact('listUser'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-
+        $listRole = $this->role->all();
+        return view('user.add', compact('listRole'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+            // Insert data to user table
+            $userCreate = $this->user->create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password) // Mã hóa password
+            ]);
+            // Insert data to role_user table
+            $userCreate->roles()->attach($request->roles);
+            // roles() là phương thức trong model User
+            // attach là phương thức dùng để lấy dữ liệu và insert vào bảng trung gian
+            // biến roles sau cùng là roles[] nằm ở view lưu id của các roles được chọn ở view
+            // $userCreate sẽ lấy được id_user và roles sẽ lấy id_roles
+            // cả 2 id này sẽ được eloquent tự động add vào bảng trung gian theo thứ tự alpha B
+//            $roles = $request->roles;
+//            foreach ($roles as $roleID) {
+//                \DB::table('role_user')->insert([
+//                    'user_id' => $userCreate->id,
+//                    'role_id' => $roleID
+//                ]);
+//            }
+            DB::commit();
+            return redirect()->route('user.index');
+        } catch (\Exception $exception) {
+            DB::rollBack();
+        }
+        // Đảm bảo khi nào chạy thành công thì mới commit(), không thì nó sẽ rollback() lại.
     }
 
     /**

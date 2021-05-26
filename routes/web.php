@@ -28,7 +28,12 @@ Route::middleware(['auth'])->group(function () {
 
     // Module User
     Route::prefix('users')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('profile'); // Thêm định danh, modulle.function
+        // Danh sách User
+        Route::get('/', [UserController::class, 'index'])->name('user.index'); // Thêm định danh, modulle.function
+        // Thêm User
+        Route::get('/create', [UserController::class, 'create'])->name('user.add');
+        Route::post('/create', [UserController::class, 'store'])->name('user.store');
+
     });
 });
 
