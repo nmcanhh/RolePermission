@@ -65,48 +65,53 @@ class UserController extends Controller
         // Đảm bảo khi nào chạy thành công thì mới commit(), không thì nó sẽ rollback() lại.
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        //
+        $listRole = $this->role->all();
+        $user = $this->user->findOrFail($id);
+        $listRoleOfUser = DB::table('role_user')->where('user_id', $id)->pluck('role_id');
+        // Tìm đến bảng role_user, lấy ra $user_id tương ứng với $id bạn vừa truyền lên, dùng pluck để lấy ra role_id
+        // Dùng get thôi thì lấy full
+        // https://laravel.com/docs/8.x/collections#method-pluck
+        return view('user.edit', compact('listRole','user', 'listRoleOfUser'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            // Update user table
+            $userUpdate = $this->user->where('id', $id)->update([
+                'name' => $request->name,
+                'email' => $request->email,
+            ]);
+            // Update to role_user table
+            DB::table('role_user')->where('user_id', $id)->delete();
+            // Xóa những gì có trước đấy trong bảng role_user
+            $userUpdate = $this->user->find($id);
+            // Tìm id của user cần sửa
+            $userUpdate->roles()->attach($request->roles);
+            // Insert dữ liệu vào bảng trung gian
+            DB::commit();
+            return redirect()->route('user.index');
+        } catch (\Exception $exception) {
+            DB::rollBack();
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function delete($id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            // Xóa User
+            $user = $this->user->find($id);
+            $user->delete($id);
+            // Xóa User ở bảng trung gian
+            $user->roles()->detach();
+            DB::commit();
+            return redirect()->route('user.index');
+        } catch (\Exception $exception) {
+            DB::rollBack();
+        }
     }
 }

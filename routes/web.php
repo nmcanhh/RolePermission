@@ -34,6 +34,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', [UserController::class, 'create'])->name('user.add');
         Route::post('/create', [UserController::class, 'store'])->name('user.store');
 
+        // Sửa User
+        Route::get('/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+        Route::post('/edit/{id}', [UserController::class, 'update'])->name('user.update');
+
+        // Xóa User
+        Route::get('/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
+
+
     });
 });
 
