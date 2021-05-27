@@ -7,22 +7,22 @@
                     @csrf
                     <div class="form-group">
                         <label>Tên</label>
-                        <input type="text" class="form-control" placeholder="Enter name" name="name">
+                        <input type="text" class="form-control" placeholder="Nhập tên" name="name">
                     </div>
 
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" class="form-control" placeholder="Enter email" name="email">
+                        <input type="email" class="form-control" placeholder="Nhập email" name="email">
                     </div>
 
                     <div class="form-group">
                         <label>Mật khẩu</label>
-                        <input type="password" class="form-control" placeholder="Enter password" name="password">
+                        <input type="password" class="form-control" placeholder="Nhập mật khẩu" name="password">
                     </div>
 
                     <div class="form-group">
                         <label>Nhập lại mật khẩu</label>
-                        <input type="password" class="form-control" placeholder="Enter confirm password" name="confirm_password">
+                        <input type="password" class="form-control" placeholder="Nhập lại mật khẩu" name="confirm_password">
                     </div>
 
                     <div class="form-group">

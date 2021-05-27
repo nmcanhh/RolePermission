@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoleController;
 
 
 /*
@@ -40,9 +41,24 @@ Route::middleware(['auth'])->group(function () {
 
         // Xóa User
         Route::get('/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
-
-
     });
+
+    // Module Role
+    Route::prefix('roles')->group(function () {
+        // Danh sách User
+        Route::get('/', [RoleController::class, 'index'])->name('role.index'); // Thêm định danh, modulle.function
+        // Thêm Role
+        Route::get('/create', [RoleController::class, 'create'])->name('role.add');
+        Route::post('/create', [RoleController::class, 'store'])->name('role.store');
+
+        // Sửa Role
+        Route::get('/edit/{id}', [RoleController::class, 'edit'])->name('role.edit');
+        Route::post('/edit/{id}', [RoleController::class, 'update'])->name('role.update');
+
+        // Xóa Role
+        Route::get('/delete/{id}', [RoleController::class, 'delete'])->name('role.delete');
+    });
+
 });
 
 

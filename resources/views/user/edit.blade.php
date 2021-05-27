@@ -20,7 +20,7 @@
                         <select multiple class="form-control" name="roles[]">
                             @foreach($listRole as $role)
                                 <option
-                                   {{ $listRoleOfUser->contains($role->id) ? 'selected' : ''}}
+                                   {{$listRoleOfUser->contains($role->id) ? 'selected' : ''}}
                             {{--Nếu id nào của role trùng với $listRoleOfUser thì trả về selected, else thì rỗng--}}
                             {{--https://laravel.com/docs/8.x/collections#method-contains--}}
                                     value="{{$role->id}}">{{$role->display_name}}
