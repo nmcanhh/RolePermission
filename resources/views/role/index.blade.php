@@ -9,7 +9,7 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th scope="col">ID</th>
+                    <th scope="col">STT</th>
                     <th scope="col">Tên</th>
                     <th scope="col">Tên hiển thị</th>
                     <th scope="col">Thao tác</th>
